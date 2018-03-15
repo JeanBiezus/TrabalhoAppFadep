@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">TrabalhoApp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="login">Login</string>
+    <string name="senha">Senha</string>
+    <string name="acessar">Acessar</string>
+    <string name="nome">Nome</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="nao_possui_usuario_cadastre_se">Não possui usuário? Cadastre-se</string>
+    <string name="cadastro_de_usuario">Cadastro de usuário</string>
+</resources>
