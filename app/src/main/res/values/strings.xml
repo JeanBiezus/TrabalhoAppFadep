@@ -10,6 +10,8 @@
     <string name="acessar">Acessar</string>
     <string name="nome">Nome</string>
     <string name="cadastrar">Cadastrar</string>
-    <string name="nao_possui_usuario_cadastre_se">Não possui usuário? Cadastre-se</string>
+    <string name="nao_possui_usuario_cadastre_se">Não possui usuário? Cadastre-se.</string>
     <string name="cadastro_de_usuario">Cadastro de usuário</string>
+    <string name="pagina_inicial">Página inicial</string>
+    <string name="nova_publicacao">Nova publicação</string>
 </resources>
