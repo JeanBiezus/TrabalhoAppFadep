@@ -3,10 +3,14 @@ package fadep.android.pos.trabalhoapp;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,10 +33,12 @@ public class ProdutoActivity extends AppCompatActivity {
     List<Feed> produtoRoom;
     private FeedReaderDbHelper reader;
     ListView lista;
+    private Bitmap imagem;
 
     @BindView(R.id.edtNome) TextView edtNome;
     @BindView(R.id.edtPreco) TextView edtPreco;
     @BindView(R.id.edtDescricao) TextView edtDescricao;
+    @BindView(R.id.imgProduto) ImageView imgProduto;
 //    @BindView(R.id.imgProduto) ImageView imgPorduto;
 
 
@@ -43,6 +50,7 @@ public class ProdutoActivity extends AppCompatActivity {
         edtPreco = findViewById(R.id.edtPreco);
         edtNome = findViewById(R.id.edtNome);
         edtDescricao = findViewById(R.id.edtDescricao);
+        imgProduto = findViewById(R.id.imgProduto);
         reader = new FeedReaderDbHelper(this);
 
 
@@ -71,9 +79,28 @@ public class ProdutoActivity extends AppCompatActivity {
         }
     }
 
+    //AGUARDA O RETORNO DA IMAGEM
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            //PEGA A IMAGEM TIRADA
+            imagem = data.getParcelableExtra("data");
+            imgProduto.setImageBitmap(imagem);
+        }
+    }
+
     public void publicar(View view) {
+        //PEGA A REFERÊNCIA DO IMAGEVIEW DO PERFIL E SETA O BACKGROUND COM A IMAGEM TIRADA
+        //imageView.setImageBitmap(thumbnail);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        imagem.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+
         Feed produto = new Feed();
         produto.nome = edtNome.getText().toString();
+        produto.imgProduto = encoded.toString();
 //        produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.descricao = edtDescricao.getText().toString();

@@ -12,14 +12,14 @@
         android:orientation="vertical"
         android:layout_weight="0.5">
 
-        <!--<ImageView-->
-            <!--android:id="@+id/imgProduto"-->
-            <!--android:layout_width="180dp"-->
-            <!--android:layout_height="180dp"-->
-            <!--android:layout_gravity="center"-->
+        <ImageView
+            android:id="@+id/imgProduto"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
 
-            <!--android:src="@drawable/profile"-->
-            <!--android:onClick="abrirCamera" />-->
+            android:src="@drawable/profile"
+            android:onClick="abrirCamera" />
 
     </LinearLayout>
     <LinearLayout
