@@ -13,10 +13,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.List;
+
+import butterknife.BindView;
+import fadep.android.pos.trabalhoapp.sqlite.Feed;
+import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    private  Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +57,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
@@ -90,10 +102,12 @@ public class MainActivity extends AppCompatActivity
 
         //SE O MENU FOR O DE LOGIN, ABRE A ACTIVITY DE LOGIN
         if (id == R.id.nav_login) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, LoginActivity.class);
+        }else if(id == R.id.nav_cadastro_produto ){
+            intent = new Intent(this,ProdutoActivity.class);
         }
 
+        startActivity(intent);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

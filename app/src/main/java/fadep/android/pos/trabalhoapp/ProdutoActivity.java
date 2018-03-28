@@ -9,38 +9,52 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import fadep.android.pos.trabalhoapp.Rom.AppDatabase;
-import fadep.android.pos.trabalhoapp.Rom.Produto;
-import fadep.android.pos.trabalhoapp.Rom.RoomAsyncTask;
+import fadep.android.pos.trabalhoapp.Rom.ControlLifeCycleApp;
+import fadep.android.pos.trabalhoapp.Rom.ProdutoDAO;
+import fadep.android.pos.trabalhoapp.sqlite.Feed;
+import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class ProdutoActivity extends AppCompatActivity {
+
+    List<Feed> produtoRoom;
+    private FeedReaderDbHelper reader;
+    ListView lista;
 
     @BindView(R.id.edtNome) TextView edtNome;
     @BindView(R.id.edtPreco) TextView edtPreco;
     @BindView(R.id.edtDescricao) TextView edtDescricao;
-    @BindView(R.id.imgProduto) ImageView imgPorduto;
-    RoomAsyncTask aRoom;
+//    @BindView(R.id.imgProduto) ImageView imgPorduto;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_produto);
-    }
-    private static Produto addProduto (final AppDatabase db, Produto produto) {
-        db.produtoDAO().create(produto);
-        return produto;
+
+        edtPreco = findViewById(R.id.edtPreco);
+        edtNome = findViewById(R.id.edtNome);
+        edtDescricao = findViewById(R.id.edtDescricao);
+        reader = new FeedReaderDbHelper(this);
+        lista = findViewById(R.id.lista);
+
+        produtoRoom = reader.read();
+        ArrayAdapter<Produto> listaAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, produtoRoom);
+        lista.setAdapter(listaAdapter);
+
+
     }
 
-    private static void populateWithTestData (AppDatabase db) {
-        Produto produto = new Produto();
-//        produto.setNome("");
-//        produto.setNome(" ");
-//        produto.setValor(0);
-        addProduto(db, produto);
-    }
+
+
 
     public void abrirCamera(View view) {
         //INSTANCIA O PACKAGEMANAGER PARA PEGAR O CAMINHO DOS ARQUIVOS DO APP
@@ -63,11 +77,12 @@ public class ProdutoActivity extends AppCompatActivity {
     }
 
     public void publicar(View view) {
-        aRoom = new RoomAsyncTask();
-        aRoom.setEdtNome(edtNome.getText().toString());
-        aRoom.setPreco(Double.parseDouble(edtPreco.getText().toString()));
-        aRoom.setEdtDescricao(edtDescricao.getText().toString());
-        aRoom.execute();
+        Feed produto = new Feed();
+        produto.nome = edtNome.getText().toString();
+//        produto.valor = Double.parseDouble(edtPreco.getText().toString());
+        produto.valor = edtPreco.getText().toString();
+        produto.descricao = edtDescricao.getText().toString();
+        reader.create(produto);
 
     }
 }
