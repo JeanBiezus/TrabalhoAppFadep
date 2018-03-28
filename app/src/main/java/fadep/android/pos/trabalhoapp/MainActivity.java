@@ -25,6 +25,9 @@ import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    List<Feed> produtoRoom;
+    private FeedReaderDbHelper reader;
+    ListView lista;
 
     private  Intent intent;
     @Override
@@ -58,7 +61,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        reader = new FeedReaderDbHelper(this);
+        lista = findViewById(R.id.lista);
 
+        atualizarListaMain();
+
+    }
+
+    public void atualizarListaMain(){
+        produtoRoom = reader.read();
+        ArrayAdapter<Produto> listaAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, produtoRoom);
+        lista.setAdapter(listaAdapter);
     }
 
     @Override

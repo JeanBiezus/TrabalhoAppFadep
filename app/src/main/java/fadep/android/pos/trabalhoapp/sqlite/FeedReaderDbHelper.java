@@ -55,7 +55,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         };
 
         String sortOrder =
-                FeedContract.COLUMN_NAME_NOME + " desc";
+                FeedContract._ID + " desc";
 
         Cursor cursor = db.query(
                 FeedContract.TABLE_NAME,   // The table to query
