@@ -72,7 +72,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
             feed._id = cursor.getInt(cursor.getColumnIndex((FeedContract._ID)));
             feed.nome = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_NOME)));
             feed.descricao = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_DESCRICAO)));
-            feed.valor = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_VALOR)));
+            feed.valor = Double.parseDouble(cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_VALOR))));
             feeds.add(feed);
 
         }

@@ -12,6 +12,10 @@ public class Produto {
     public String descricao;
     public double valor;
     public String imgProduto;
+    public String localizacao;
 
+    public Produto getProduto() {
+        return this;
+    }
 
 }

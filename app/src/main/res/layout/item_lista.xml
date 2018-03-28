@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Título Publicação"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:id="@+id/txt_titulo_produto_lista"
+                android:alpha="0.7"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição Publicação"
+                android:textSize="12dp"
+                android:id="@+id/txt_descricao_produto_lista"
+                android:alpha="0.7"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$ 1.500,00"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/txt_preco_produto_lista"
+                android:textColor="@color/colorPrimary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Local Publicação"
+                android:textSize="12dp"
+                android:id="@+id/txt_local_produto_lista"
+                android:alpha="0.7"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="0.4"
+            android:id="@+id/imagem_produto_lista"
+            android:src="@drawable/no_image"
+            android:scaleType="centerCrop"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

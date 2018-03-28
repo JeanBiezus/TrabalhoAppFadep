@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,7 +26,7 @@ import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    List<Feed> produtoRoom;
+    List<Feed> produtosRoom;
     private FeedReaderDbHelper reader;
     ListView lista;
 
@@ -41,16 +42,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //BOTÃO FLUTUANTE
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         //SIDE MENU
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -62,15 +53,23 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         reader = new FeedReaderDbHelper(this);
-        lista = findViewById(R.id.lista);
-
-        atualizarListaMain();
+        lista = findViewById(R.id.listaProdutos);
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        atualizarListaMain();
+    }
+
     public void atualizarListaMain(){
-        produtoRoom = reader.read();
-        ArrayAdapter<Produto> listaAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, produtoRoom);
+        produtosRoom = reader.read();
+        List<Produto> produtos = new ArrayList<>();
+        for (Feed feed : produtosRoom) {
+            produtos.add(feed.getProduto());
+        }
+        ProdutoListaAdapter listaAdapter = new ProdutoListaAdapter(produtos, this);
         lista.setAdapter(listaAdapter);
     }
 

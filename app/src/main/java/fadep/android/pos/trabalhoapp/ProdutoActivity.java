@@ -44,11 +44,6 @@ public class ProdutoActivity extends AppCompatActivity {
         edtNome = findViewById(R.id.edtNome);
         edtDescricao = findViewById(R.id.edtDescricao);
         reader = new FeedReaderDbHelper(this);
-        lista = findViewById(R.id.lista);
-
-        produtoRoom = reader.read();
-        ArrayAdapter<Produto> listaAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, produtoRoom);
-        lista.setAdapter(listaAdapter);
 
 
     }
@@ -80,7 +75,7 @@ public class ProdutoActivity extends AppCompatActivity {
         Feed produto = new Feed();
         produto.nome = edtNome.getText().toString();
 //        produto.valor = Double.parseDouble(edtPreco.getText().toString());
-        produto.valor = edtPreco.getText().toString();
+        produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.descricao = edtDescricao.getText().toString();
         reader.create(produto);
 

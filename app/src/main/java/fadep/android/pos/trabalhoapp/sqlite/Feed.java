@@ -1,16 +1,13 @@
 package fadep.android.pos.trabalhoapp.sqlite;
 
+import fadep.android.pos.trabalhoapp.Produto;
+
 /**
  * Created by Jean on 17/03/2018.
  */
 
-public class Feed {
+public class Feed  extends Produto{
 
-    public int _id;
-    public String nome;
-    public String descricao;
-    public String valor;
-    public String imgProduto;
     @Override
 
     // vai mostrar deste jeito na tela de lista
