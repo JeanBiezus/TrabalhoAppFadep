@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,12 +36,14 @@ public class ProdutoActivity extends AppCompatActivity {
     private FeedReaderDbHelper reader;
     ListView lista;
     private Bitmap imagem;
+    private List<Bitmap> imagens;
 
     @BindView(R.id.edtNome) TextView edtNome;
     @BindView(R.id.edtPreco) TextView edtPreco;
     @BindView(R.id.edtDescricao) TextView edtDescricao;
-    @BindView(R.id.imgProduto) ImageView imgProduto;
 //    @BindView(R.id.imgProduto) ImageView imgPorduto;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
 
     @Override
@@ -50,10 +54,12 @@ public class ProdutoActivity extends AppCompatActivity {
         edtPreco = findViewById(R.id.edtPreco);
         edtNome = findViewById(R.id.edtNome);
         edtDescricao = findViewById(R.id.edtDescricao);
-        imgProduto = findViewById(R.id.imgProduto);
         reader = new FeedReaderDbHelper(this);
+        viewPager = findViewById(R.id.viewPager);
 
+        viewPagerAdapter = new ViewPagerAdapter(this);
 
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
 
@@ -85,7 +91,9 @@ public class ProdutoActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //PEGA A IMAGEM TIRADA
             imagem = data.getParcelableExtra("data");
-            imgProduto.setImageBitmap(imagem);
+            viewPagerAdapter.addImage(imagem);
+            LinearLayout buttonsContainer = findViewById(R.id.image_buttons_container);
+            buttonsContainer.bringToFront();
         }
     }
 
