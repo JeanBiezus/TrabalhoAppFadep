@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TrabalhoApp.iml" filepath="$PROJECT_DIR$/TrabalhoApp.iml" />
       <module fileurl="file://D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TrabalhoFinal_POS\TrabalhoApp.iml" filepath="D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TrabalhoFinal_POS\TrabalhoApp.iml" />
+      <module fileurl="file://D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TRABALHOFINAL\TrabalhoAppFadep\TrabalhoApp.iml" filepath="D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TRABALHOFINAL\TrabalhoAppFadep\TrabalhoApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TrabalhoAppFadep.iml" filepath="$PROJECT_DIR$/TrabalhoAppFadep.iml" />
       <module fileurl="file://D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TrabalhoFinal_POS\TrabalhoAppFadep.iml" filepath="D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TrabalhoFinal_POS\TrabalhoAppFadep.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TrabalhoFinal_POS.iml" filepath="$PROJECT_DIR$/TrabalhoFinal_POS.iml" />
+      <module fileurl="file://D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TRABALHOFINAL\TrabalhoAppFadep\TrabalhoFinal_POS.iml" filepath="D:\FACULDADE\POS-DESENVOLVIMENTO-APP-MOBILE\TRABALHOFINAL\TrabalhoAppFadep\TrabalhoFinal_POS.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
