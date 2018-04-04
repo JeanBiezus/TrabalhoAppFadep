@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import fadep.android.pos.trabalhoapp.WS.MainProduto;
+
 /**
  * Created by jean on 14/03/18.
  */
@@ -28,7 +30,7 @@ public class LoginActivity extends AppCompatActivity{
 
     //ABRE A ACTIVITY DE CADASTRO DE USUARIO
     public void novoUsuario(View view) {
-        Intent intent = new Intent(this, CadastroUsuarioActivity.class);
+        Intent intent = new Intent(this, MainProduto.class);
         startActivityForResult(intent, 1);
     }
 }
