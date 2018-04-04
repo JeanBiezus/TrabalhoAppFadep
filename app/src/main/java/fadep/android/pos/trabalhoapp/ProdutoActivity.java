@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -14,8 +12,6 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,9 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import butterknife.BindView;
-import fadep.android.pos.trabalhoapp.Rom.AppDatabase;
-import fadep.android.pos.trabalhoapp.Rom.ControlLifeCycleApp;
-import fadep.android.pos.trabalhoapp.Rom.ProdutoDAO;
 import fadep.android.pos.trabalhoapp.sqlite.Feed;
 import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
@@ -115,4 +108,8 @@ public class ProdutoActivity extends AppCompatActivity {
         reader.create(produto);
 
     }
+
+
+
+
 }

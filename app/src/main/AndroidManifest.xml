@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fadep.android.pos.trabalhoapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +30,7 @@
             android:label="@string/cadastro_de_usuario"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".ProdutoActivity" android:label="Nova Publicação"></activity>
+        <activity android:name=".WS.MainProduto"/>
     </application>
 
 </manifest>
