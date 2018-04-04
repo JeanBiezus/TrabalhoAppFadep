@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by jean on 28/03/18.
@@ -21,7 +22,6 @@ public class ViewPagerAdapter extends PagerAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
     private List<Bitmap> images = new ArrayList<>();
-
 
     public ViewPagerAdapter(Context context) {
         this.context = context;
@@ -53,9 +53,14 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ViewPager viewPager = (ViewPager) container;
         View view = (View) object;
+        ViewPager viewPager = (ViewPager) container;
         viewPager.removeView(view);
+        images.remove(position);
+        notifyDataSetChanged();
+
+        if (images.size() > 0)
+            viewPager.setCurrentItem(images.size() - 1, true);
     }
 
     public void addImage(Bitmap image) {

@@ -11,7 +11,9 @@ public class Produto {
     public String nome;
     public String descricao;
     public double valor;
-    public String imgProduto;
+    public String imagem1;
+    public String imagem2;
+    public String imagem3;
     public String localizacao;
 
     public Produto getProduto() {

@@ -14,4 +14,5 @@
     <string name="cadastro_de_usuario">Cadastro de usuário</string>
     <string name="pagina_inicial">Página inicial</string>
     <string name="nova_publicacao">Nova publicação</string>
+    <string name="maximo_imagens_publicacao">Máximo de 3 imagens por publicação</string>
 </resources>
