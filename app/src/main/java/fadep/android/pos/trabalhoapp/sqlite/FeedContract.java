@@ -28,13 +28,13 @@ public class FeedContract implements BaseColumns{
     public static final class ProdutoImagem {
         static final String TABLE_NAME = "produtoimagem";
         static final String COLUMN_NAME_IMAGEM = "imagem";
-        static final String COLUMN_NAME_ID_PUBLICACAO = "idpublicacao";
+        static final String COLUMN_NAME_ID_PRODUTO = "idproduto";
 
         public static final String CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY," +
                         COLUMN_NAME_IMAGEM + " TEXT," +
-                        COLUMN_NAME_ID_PUBLICACAO + " INTEGER)";
+                        COLUMN_NAME_ID_PRODUTO + " INTEGER)";
 
         public static final String DROP_TABLE =
                 "DROP TABLE IF EXISTS " + TABLE_NAME;

@@ -61,10 +61,10 @@ public class ProdutoListaAdapter extends BaseAdapter {
         txtValor.setText("R$ " + Double.toString(produto.valor));
         txtLocal.setText(produto.localizacao);
 
-//        byte[] decodedString = Base64.decode(produto.imgProduto, Base64.DEFAULT);
-//        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        byte[] decodedString = Base64.decode(produto.imagens.get(0).getImagem(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-//        imgProduto.setImageBitmap(decodedByte);
+        imgProduto.setImageBitmap(decodedByte);
 
         return v;
     }

@@ -5,7 +5,7 @@ package fadep.android.pos.trabalhoapp;
  */
 
 public class ProdutoImagem {
-    private int id;
+    private int _id;
     private String imagem;
     private int idPublicacao;
 
@@ -15,11 +15,11 @@ public class ProdutoImagem {
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public String getImagem() {

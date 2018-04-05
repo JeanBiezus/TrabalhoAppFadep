@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -28,6 +30,9 @@ import java.util.Observer;
 import butterknife.BindView;
 import fadep.android.pos.trabalhoapp.sqlite.FeedProduto;
 import fadep.android.pos.trabalhoapp.sqlite.FeedProdutoImagem;
+import fadep.android.pos.trabalhoapp.WS.ImagemProduto;
+import fadep.android.pos.trabalhoapp.WS.MainProduto;
+import fadep.android.pos.trabalhoapp.WS.PordutoRetrofitModel;
 import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class ProdutoActivity extends AppCompatActivity {
@@ -127,12 +132,13 @@ public class ProdutoActivity extends AppCompatActivity {
         produto.descricao = edtDescricao.getText().toString();
         reader.create(produto, new Observer() {
             @Override
-            public void update(Observable observable, Object o) {
-                Log.i("salvar produto", "produto salvo: " + o);
+            public void update(Observable observable, Object idproduto) {
+                Log.i("salvar produto", "produto salvo: " + idproduto);
 
                 for (ProdutoImagem pi: imagens) {
                     FeedProdutoImagem fpi = new FeedProdutoImagem();
                     fpi.imagem = pi.getImagem();
+                    fpi.idproduto = (int) idproduto;
                     reader.create(fpi);
                 }
             }
@@ -146,6 +152,30 @@ public class ProdutoActivity extends AppCompatActivity {
             btnRemoverImagem.setVisibility(View.GONE);
     }
 
+
+    public void salvarNoServidor(View view){
+        MainProduto mainProduto = new MainProduto();
+        PordutoRetrofitModel produto = new PordutoRetrofitModel();
+        produto.setPreco(Double.parseDouble(edtPreco.getText().toString()));
+        produto.setNome(edtNome.getText().toString());
+        produto.setDescricao(edtDescricao.getText().toString());
+        Date data = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        produto.setDataCadastro(sdf.format(data));
+        produto.setDataAlteracao(sdf.format(data));
+        produto.setDeletado(false);
+
+        ImagemProduto imagemProduto = new ImagemProduto();
+        imagemProduto.setDataCadastro(sdf.format(data));
+        imagemProduto.setDataAlteracao(sdf.format(data));
+        imagemProduto.setDeletado(false);
+        imagemProduto.setImagem("888");
+
+        mainProduto.salvarProduto(produto, imagemProduto);
+        Toast toast = Toast.makeText( getApplicationContext(), "Salvo Com Sucesso",Toast.LENGTH_LONG);
+        toast.show();
+
+    }
 
 
 

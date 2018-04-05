@@ -12,6 +12,6 @@ public class FeedProdutoImagem extends ProdutoImagem{
 
     // vai mostrar deste jeito na tela de lista
     public String toString() {
-        return "id: " + _id + "\n" + "imagem: " + imagem + "\n" + "idPublicacao: " + idPublicacao;
+        return "id: " + _id + "\n" + "imagem: " + imagem + "\n" + "idPublicacao: " + idproduto;
     }
 }

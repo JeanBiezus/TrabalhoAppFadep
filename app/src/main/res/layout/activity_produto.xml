@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/delete"
             android:layout_margin="10dp"
-            android:backgroundTint="@color/colorDanger"
+            app:backgroundTint="@color/colorDanger"
             android:tint="@android:color/white"
             android:onClick="removerImagem"
             android:id="@+id/btn_remover_imagem"/>

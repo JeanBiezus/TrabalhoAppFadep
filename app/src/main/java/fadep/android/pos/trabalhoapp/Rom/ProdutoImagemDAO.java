@@ -15,10 +15,10 @@ import java.util.List;
 public interface ProdutoImagemDAO {
 
     @Insert
-    public void create(Produto produto);
+    public void create(ProdutoImagem produtoimagem);
 
-    @Query("SELECT * FROM produto p INNER JOIN produtoimagem AS pi ON p._id = pi.idproduto")
-    public List<Produto> read();
+    @Query("SELECT * FROM produtoimagem pi WHERE pi.idproduto = :idproduto")
+    public List<ProdutoImagem> read(int idproduto);
 
     @Update
     public void update(Produto produto);

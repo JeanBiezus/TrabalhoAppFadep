@@ -28,8 +28,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(FeedContract.ProdutoImagem.CREATE_TABLE);
         db.execSQL(FeedContract.Produto.CREATE_TABLE);
+        db.execSQL(FeedContract.ProdutoImagem.CREATE_TABLE);
     }
 
     @Override
@@ -44,9 +44,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         values.put(FeedContract.Produto.COLUMN_NAME_NOME, feed.nome);
         values.put(FeedContract.Produto.COLUMN_NAME_DESCRICAO, feed.descricao);
         values.put(FeedContract.Produto.COLUMN_NAME_VALOR, feed.valor);
-
         long newRowId = db.insert(FeedContract.Produto.TABLE_NAME, null, values);
-        callback.update(null, newRowId);
+        callback.update(null, (int)newRowId);
         db.close();
     }
 
@@ -54,7 +53,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FeedContract.ProdutoImagem.COLUMN_NAME_ID_PUBLICACAO, feed.idproduto);
+        values.put(FeedContract.ProdutoImagem.COLUMN_NAME_ID_PRODUTO, feed.idproduto);
         values.put(FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM, feed.imagem);
 
         long newRowId = db.insert(FeedContract.ProdutoImagem.TABLE_NAME, null, values);
@@ -68,21 +67,14 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 FeedContract._ID,
                 FeedContract.Produto.COLUMN_NAME_NOME,
                 FeedContract.Produto.COLUMN_NAME_DESCRICAO,
-                FeedContract.Produto.COLUMN_NAME_VALOR
+                FeedContract.Produto.COLUMN_NAME_VALOR,
+                FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM
         };
 
         String sortOrder =
                 FeedContract._ID + " desc";
 
-        Cursor cursor = db.query(
-                FeedContract.Produto.TABLE_NAME,   // The table to query
-                null,             // The array of columns to return (pass null to get all)
-                null,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                sortOrder               // The sort order
-        );
+        Cursor cursor = db.rawQuery("SELECT * FROM produto p INNER JOIN produtoimagem pi ON p._id = pi.idproduto", null);
         List<FeedProduto> feedProdutos = new ArrayList<>();
         while (cursor.moveToNext()) {
             FeedProduto feedProduto = new FeedProduto();
@@ -91,7 +83,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
             feedProduto.descricao = cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_DESCRICAO)));
             feedProduto.valor = Double.parseDouble(cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_VALOR))));
 
-            ProdutoImagem produtoImagem = new ProdutoImagem(cursor.getString(cursor.getColumnIndex((FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM))), -1);
+            ProdutoImagem produtoImagem = new ProdutoImagem(cursor.getString(cursor.getColumnIndex((FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM))), feedProduto._id);
 
             feedProduto.imagens.add(produtoImagem);
 

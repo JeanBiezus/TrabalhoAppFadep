@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Jean on 19/03/2018.
  */
-@Entity
+@Entity(tableName = "produto")
 public class Produto {
     @PrimaryKey(autoGenerate = true)
     public int _id;
