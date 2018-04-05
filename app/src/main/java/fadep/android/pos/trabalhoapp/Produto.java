@@ -1,7 +1,7 @@
 package fadep.android.pos.trabalhoapp;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jean on 19/03/2018.
@@ -11,9 +11,7 @@ public class Produto {
     public String nome;
     public String descricao;
     public double valor;
-    public String imagem1;
-    public String imagem2;
-    public String imagem3;
+    public List<ProdutoImagem> imagens = new ArrayList<>();
     public String localizacao;
 
     public Produto getProduto() {

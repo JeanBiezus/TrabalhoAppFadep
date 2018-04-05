@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Jean on 19/03/2018.
  */
 @Dao
-public interface ProdutoDAO {
+public interface ProdutoImagemDAO {
 
     @Insert
     public void create(Produto produto);
