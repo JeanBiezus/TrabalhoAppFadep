@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainProduto extends AppCompatActivity{
 
-    private String BASE_URL = "http://192.168.2.113:8085/WebMobile-0.0.1-SNAPSHOT/rest/";
+    private String BASE_URL = "http://192.168.2.102:8085/WebMobile-0.0.1-SNAPSHOT/rest/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +36,7 @@ public class MainProduto extends AppCompatActivity{
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    public void salvarProduto(final PordutoRetrofitModel produtoModel, final ImagemProduto imagemProduto){
+    public void salvarProduto(final PordutoRetrofitModel produtoModel, final List<ImagemProduto> imagemProduto){
 
 
         ProdutoWS ws = retrofit.create(ProdutoWS.class);
@@ -57,10 +57,14 @@ public class MainProduto extends AppCompatActivity{
                 if (response.isSuccessful()){
                     ProdutoWS ws = retrofit.create(ProdutoWS.class);
 
+                    Log.i("dss", "ds" + response.body().getId()+response.body().getNome());
                     // salva na tabela imagem as imagens
-                    imagemProduto.setIdProduto(response.body().getId());
+                    for(ImagemProduto imagemProduto : imagemProduto){
+                        imagemProduto.setIdProduto(response.body().getId());
 
+                    }
                     final Call<ImagemProduto> imagemProdutos = ws.salvarImagem(imagemProduto);
+
                     imagemProdutos.enqueue(new Callback<ImagemProduto>() {
                         @Override
                         public void onResponse(Call<ImagemProduto> call, Response<ImagemProduto> retorno) {
