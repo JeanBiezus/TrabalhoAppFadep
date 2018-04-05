@@ -61,7 +61,7 @@ public class ProdutoListaAdapter extends BaseAdapter {
         txtValor.setText("R$ " + Double.toString(produto.valor));
         txtLocal.setText(produto.localizacao);
 
-        byte[] decodedString = Base64.decode(produto.imgProduto, Base64.DEFAULT);
+        byte[] decodedString = Base64.decode(produto.imagem1, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         imgProduto.setImageBitmap(decodedByte);

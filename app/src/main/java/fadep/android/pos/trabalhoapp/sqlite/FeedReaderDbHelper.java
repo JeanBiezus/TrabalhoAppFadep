@@ -39,7 +39,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         values.put(FeedContract.COLUMN_NAME_NOME, feed.nome);
         values.put(FeedContract.COLUMN_NAME_DESCRICAO, feed.descricao);
         values.put(FeedContract.COLUMN_NAME_VALOR, feed.valor);
-        values.put(FeedContract.COLUMN_NAME_IMAGEM, feed.imgProduto);
+        values.put(FeedContract.COLUMN_NAME_IMAGEM, feed.imagem1);
 
         long newRowId = db.insert(FeedContract.TABLE_NAME, null, values);
         db.close();
@@ -75,7 +75,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
             feed.nome = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_NOME)));
             feed.descricao = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_DESCRICAO)));
             feed.valor = Double.parseDouble(cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_VALOR))));
-            feed.imgProduto = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_IMAGEM)));
+            feed.imagem1 = cursor.getString(cursor.getColumnIndex((FeedContract.COLUMN_NAME_IMAGEM)));
             feeds.add(feed);
 
         }
@@ -91,7 +91,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         values.put(FeedContract.COLUMN_NAME_NOME, feed.nome);
         values.put(FeedContract.COLUMN_NAME_DESCRICAO, feed.descricao);
         values.put(FeedContract.COLUMN_NAME_VALOR, feed.valor);
-        values.put(FeedContract.COLUMN_NAME_IMAGEM, feed.imgProduto);
+        values.put(FeedContract.COLUMN_NAME_IMAGEM, feed.imagem1);
 
         String selection = FeedContract._ID + " = ?";
         String[] selectionArgs = {"" + feed._id};

@@ -20,9 +20,14 @@ public interface ProdutoWS {
     @POST("produto/salvar")
     Call<PordutoRetrofitModel> salvar( @Body PordutoRetrofitModel produto);
 //    Call<PordutoRetrofitModel> salvar(@Header("content-type") String contentType, @Body PordutoRetrofitModel produto);
+    @POST("produto/imagem/salvar")
+    Call<ImagemProduto> salvarImagem( @Body ImagemProduto imagemProduto);
 
     @GET("produto")
     Call<List<PordutoRetrofitModel>> findALL();
+
+    @GET("produto/findprodutoporimagem")
+    Call<List> buscaProdutoPorImagem();
 
     @GET("produto/{id}")
     Call<PordutoRetrofitModel> findById(@Path("id") int id);
