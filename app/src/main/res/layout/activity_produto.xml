@@ -114,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:onClick="salvarNoServidor"
+                android:onClick="publicar"
                 android:background="@color/colorPrimary"
                 android:text="Publicar"
                 android:textColor="@android:color/white"

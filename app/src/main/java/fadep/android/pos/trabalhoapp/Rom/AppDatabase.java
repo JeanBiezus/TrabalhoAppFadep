@@ -9,8 +9,9 @@ import android.content.Context;
  * Created by Jean on 19/03/2018.
  */
 
-@Database(entities = {Produto.class}, version = 1)
+@Database(entities = {Produto.class, ProdutoImagem.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProdutoDAO produtoDAO();
+    public abstract ProdutoImagemDAO produtoImagemDAO();
 }
 

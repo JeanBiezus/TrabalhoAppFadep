@@ -67,4 +67,8 @@ public class ViewPagerAdapter extends PagerAdapter {
         images.add(image);
         notifyDataSetChanged();
     }
+
+    public List<Bitmap> getImages() {
+        return images;
+    }
 }

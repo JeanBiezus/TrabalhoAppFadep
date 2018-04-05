@@ -2,9 +2,6 @@ package fadep.android.pos.trabalhoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,20 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import fadep.android.pos.trabalhoapp.sqlite.Feed;
+import fadep.android.pos.trabalhoapp.sqlite.FeedProduto;
 import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    List<Feed> produtosRoom;
+    List<FeedProduto> produtosRoom;
     private FeedReaderDbHelper reader;
     ListView lista;
 
@@ -66,8 +61,8 @@ public class MainActivity extends AppCompatActivity
     public void atualizarListaMain(){
         produtosRoom = reader.read();
         List<Produto> produtos = new ArrayList<>();
-        for (Feed feed : produtosRoom) {
-            produtos.add(feed.getProduto());
+        for (FeedProduto feedProduto : produtosRoom) {
+            produtos.add(feedProduto.getProduto());
         }
         ProdutoListaAdapter listaAdapter = new ProdutoListaAdapter(produtos, this);
         lista.setAdapter(listaAdapter);

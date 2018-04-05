@@ -15,28 +15,29 @@ import android.util.Log;
 import android.view.View;
 
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
+import fadep.android.pos.trabalhoapp.sqlite.FeedProduto;
+import fadep.android.pos.trabalhoapp.sqlite.FeedProdutoImagem;
 import fadep.android.pos.trabalhoapp.WS.ImagemProduto;
 import fadep.android.pos.trabalhoapp.WS.MainProduto;
 import fadep.android.pos.trabalhoapp.WS.PordutoRetrofitModel;
-import fadep.android.pos.trabalhoapp.sqlite.Feed;
 import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class ProdutoActivity extends AppCompatActivity {
 
-    List<Feed> produtoRoom;
+    List<FeedProduto> produtoRoom;
     private FeedReaderDbHelper reader;
     private Bitmap imagem;
 
@@ -110,20 +111,38 @@ public class ProdutoActivity extends AppCompatActivity {
     }
 
     public void publicar(View view) {
-        //PEGA A REFERÊNCIA DO IMAGEVIEW DO PERFIL E SETA O BACKGROUND COM A IMAGEM TIRADA
-        //imageView.setImageBitmap(thumbnail);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        imagem.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        Feed produto = new Feed();
+        FeedProduto produto = new FeedProduto();
         produto.nome = edtNome.getText().toString();
+
+        final List<ProdutoImagem> imagens = new ArrayList<>();
+        for (Bitmap img: viewPagerAdapter.getImages()) {
+            //PEGA A REFERÊNCIA DO IMAGEVIEW DO PERFIL E SETA O BACKGROUND COM A IMAGEM TIRADA
+            //imageView.setImageBitmap(thumbnail);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            img.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            ProdutoImagem produtoImagem = new ProdutoImagem(encoded, -1);
+            imagens.add(produtoImagem);
+        }
 
 //      produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.descricao = edtDescricao.getText().toString();
-        reader.create(produto);
+        reader.create(produto, new Observer() {
+            @Override
+            public void update(Observable observable, Object idproduto) {
+                Log.i("salvar produto", "produto salvo: " + idproduto);
+
+                for (ProdutoImagem pi: imagens) {
+                    FeedProdutoImagem fpi = new FeedProdutoImagem();
+                    fpi.imagem = pi.getImagem();
+                    fpi.idproduto = (int) idproduto;
+                    reader.create(fpi);
+                }
+            }
+        });
     }
 
     public void removerImagem(View view) {

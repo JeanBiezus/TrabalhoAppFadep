@@ -6,7 +6,7 @@ import fadep.android.pos.trabalhoapp.Produto;
  * Created by Jean on 17/03/2018.
  */
 
-public class Feed  extends Produto{
+public class FeedProduto extends Produto{
 
     @Override
 
