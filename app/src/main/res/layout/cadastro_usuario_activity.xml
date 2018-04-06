@@ -47,26 +47,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login"
+            android:id="@+id/edtLogin"
             android:layout_marginBottom="10dp"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/senha"
+            android:id="@+id/edtsenha"
             android:layout_marginBottom="10dp"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/nome"
+            android:id="@+id/edtNome"
             android:layout_marginBottom="10dp"/>
+
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/cadastrar"
-            android:background="@color/colorPrimaryDark"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:onClick="Salvar"
+            android:background="@color/colorPrimary"
+            android:text="Salvar"
             android:textColor="@android:color/white"
-            android:layout_marginTop="50dp"/>
+            android:layout_margin="16dp"/>
     </LinearLayout>
 </LinearLayout>

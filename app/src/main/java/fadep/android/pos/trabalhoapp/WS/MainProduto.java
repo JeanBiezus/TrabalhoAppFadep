@@ -174,4 +174,23 @@ public class MainProduto extends AppCompatActivity{
         });
 
     }
+
+    public void salvarUsuario(final Usuario usuario){
+        ProdutoWS ws = retrofit.create(ProdutoWS.class);
+        final Call<Usuario> u = ws.salvarUsuario(usuario);
+       u.enqueue(new Callback<Usuario>() {
+           @Override
+           public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+               if (response.isSuccessful()) {
+               Log.e("SALVOU USUARo", " "+ response.body().getNome() + response.body().getId());
+
+               }
+           }
+
+           @Override
+           public void onFailure(Call<Usuario> call, Throwable t) {
+
+           }
+       });
+    }
 }

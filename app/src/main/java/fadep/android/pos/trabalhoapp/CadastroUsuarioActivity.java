@@ -16,8 +16,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import butterknife.BindView;
+import fadep.android.pos.trabalhoapp.WS.MainProduto;
+import fadep.android.pos.trabalhoapp.WS.Usuario;
 
 /**
  * Created by jean on 15/03/18.
@@ -25,12 +33,21 @@ import java.io.ByteArrayOutputStream;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
 
+    @BindView(R.id.edtNome) TextView edtNome;
+    @BindView(R.id.edtLogin) TextView edtLogin;
+    @BindView(R.id.edtsenha) TextView edtSenha;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cadastro_usuario_activity);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        edtNome = findViewById(R.id.edtNome);
+        edtLogin = findViewById(R.id.edtLogin);
+        edtSenha = findViewById(R.id.edtsenha);
+
 
         //MOSTRA O NOME DO APP E O BOTÃO DE VOLTAR NA TOOLBAR
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -91,5 +108,24 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
             imageView.setImageBitmap(decodedByte);
         }
+    }
+
+    public void Salvar(View view) {
+        MainProduto mainProduto = new MainProduto();
+        Date data = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Usuario u = new Usuario();
+        u.setDataAlteracao(sdf.format(data));
+        u.setDataCadastro(sdf.format(data));
+        u.setDeletado(false);
+        u.setNome(edtNome.getText().toString());
+        u.setLogin(edtLogin.getText().toString());
+        u.setSenha(edtSenha.getText().toString());
+        u.setFoto("sasssss");
+
+        mainProduto.salvarUsuario(u);
+        Toast toast = Toast.makeText(getApplicationContext(), "Salvo Com Sucesso", Toast.LENGTH_LONG);
+        toast.show();
+
     }
 }

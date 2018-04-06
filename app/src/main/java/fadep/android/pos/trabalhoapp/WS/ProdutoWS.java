@@ -32,5 +32,7 @@ public interface ProdutoWS {
     @GET("produto/{id}")
     Call<PordutoRetrofitModel> findById(@Path("id") int id);
 
+    @POST("usuario/salvar")
+    Call<Usuario> salvarUsuario( @Body Usuario usuario);
 
 }

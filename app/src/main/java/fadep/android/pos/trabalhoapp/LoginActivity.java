@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity{
 
     //ABRE A ACTIVITY DE CADASTRO DE USUARIO
     public void novoUsuario(View view) {
-        Intent intent = new Intent(this, MainProduto.class);
+        Intent intent = new Intent(this, CadastroUsuarioActivity.class);
         startActivityForResult(intent, 1);
     }
 }
