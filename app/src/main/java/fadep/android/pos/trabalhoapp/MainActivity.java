@@ -1,6 +1,8 @@
 package fadep.android.pos.trabalhoapp;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,16 +16,21 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
+import fadep.android.pos.trabalhoapp.WS.MainProduto;
 import fadep.android.pos.trabalhoapp.sqlite.FeedProduto;
 import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    List<FeedProduto> produtosRoom;
+    private List<FeedProduto> produtosRoom;
     private FeedReaderDbHelper reader;
-    ListView lista;
+    private ListView lista;
+
+    private InternetConnectedReceiver receiver = new InternetConnectedReceiver();
 
     private  Intent intent;
     @Override
@@ -50,6 +57,9 @@ public class MainActivity extends AppCompatActivity
         reader = new FeedReaderDbHelper(this);
         lista = findViewById(R.id.listaProdutos);
 
+        IntentFilter filtro = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filtro);
+
     }
 
     @Override
@@ -59,13 +69,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void atualizarListaMain(){
-        produtosRoom = reader.read();
-        List<Produto> produtos = new ArrayList<>();
-        for (FeedProduto feedProduto : produtosRoom) {
-            produtos.add(feedProduto.getProduto());
-        }
-        ProdutoListaAdapter listaAdapter = new ProdutoListaAdapter(produtos, this);
-        lista.setAdapter(listaAdapter);
+//        produtosRoom = reader.read();
+//        List<Produto> produtos = new ArrayList<>();
+//        for (FeedProduto feedProduto : produtosRoom) {
+//            produtos.add(feedProduto.getProduto());
+//        }
+
+        MainProduto mainProduto = new MainProduto();
+        final MainActivity ma = this;
+        mainProduto.buscarProdutos(new Observer() {
+            @Override
+            public void update(Observable observable, Object o) {
+                List<Produto> produtos = (List<Produto>) o;
+                ProdutoListaAdapter listaAdapter = new ProdutoListaAdapter(produtos, ma);
+                lista.setAdapter(listaAdapter);
+            }
+        });
     }
 
     @Override
@@ -118,5 +137,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }
