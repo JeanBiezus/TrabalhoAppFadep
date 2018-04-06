@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Observer;
 
 import fadep.android.pos.trabalhoapp.R;
 import retrofit2.Call;
@@ -63,21 +64,27 @@ public class MainProduto extends AppCompatActivity{
                         imagemProduto.setIdProduto(response.body().getId());
 
                     }
-                    final Call<ImagemProduto> imagemProdutos = ws.salvarImagem(imagemProduto);
+                    Log.i("TAG", "onResponse: ENVIANDO IMAGENS");
+                    //final Call<ImagemProduto> imagemProdutos = ws.salvarImagem(imagemProduto);
 
-                    imagemProdutos.enqueue(new Callback<ImagemProduto>() {
-                        @Override
-                        public void onResponse(Call<ImagemProduto> call, Response<ImagemProduto> retorno) {
-                            if (retorno.isSuccessful()){
-                                return;
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ImagemProduto> call, Throwable t) {
-
-                        }
-                    });
+//                    imagemProdutos.enqueue(new Callback<ImagemProduto>() {
+//                        @Override
+//                        public void onResponse(Call<ImagemProduto> call, Response<ImagemProduto> retorno) {
+//                            if (retorno.isSuccessful()){
+//                                Log.i("TAG", "onResponse: SALVOU IMAGENS");
+//                                return;
+//                            } else {
+//                                Log.i("TAG", "onResponse: ERRO AO SALVAR IMAGENS " + retorno.message());
+//
+//                            }
+//                        }
+//
+//
+//                        @Override
+//                        public void onFailure(Call<ImagemProduto> call, Throwable t) {
+//                            Log.i("ERROR", "onFailure: " + t.getMessage());
+//                        }
+//                    });
 
 
 
@@ -123,6 +130,46 @@ public class MainProduto extends AppCompatActivity{
             @Override
             public void onFailure(Call<List<PordutoRetrofitModel>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"erro" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    public void buscarProdutos(final Observer callback){
+
+        //        FAZ O FIND NO SERVIDOR
+        Gson g = new GsonBuilder().registerTypeAdapter(PordutoRetrofitModel.class, new ProdutoDec() ).setLenient().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(g))
+                .build();
+
+        ProdutoWS ws = retrofit.create(ProdutoWS.class);
+        Call<List<PordutoRetrofitModel>> produtos = ws.buscarProdutos();
+
+        produtos.enqueue(new Callback<List<PordutoRetrofitModel>>() {
+            @Override
+            public void onResponse(Call<List<PordutoRetrofitModel>> call, Response<List<PordutoRetrofitModel>> response) {
+                if (response.isSuccessful()){
+                    List<PordutoRetrofitModel> prods = response.body();
+                    for(PordutoRetrofitModel p : prods){
+                        Log.i("NOME", "NOME +"+ p.getNome() + "id"+ p.getId());
+
+                    }
+
+                    callback.update(null, response.body());
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"erro" + response.code(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<PordutoRetrofitModel>> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(),"erro" + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.i("ERROR", "onFailure: " + t.getMessage());
             }
         });
 

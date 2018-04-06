@@ -1,9 +1,12 @@
 package fadep.android.pos.trabalhoapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -110,24 +113,9 @@ public class ProdutoActivity extends AppCompatActivity {
         }
     }
 
-    public void publicar(View view) {
+    public void salvarRoom(View view) {
         FeedProduto produto = new FeedProduto();
         produto.nome = edtNome.getText().toString();
-
-        final List<ProdutoImagem> imagens = new ArrayList<>();
-        for (Bitmap img: viewPagerAdapter.getImages()) {
-            //PEGA A REFERÊNCIA DO IMAGEVIEW DO PERFIL E SETA O BACKGROUND COM A IMAGEM TIRADA
-            //imageView.setImageBitmap(thumbnail);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            img.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
-            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-            ProdutoImagem produtoImagem = new ProdutoImagem(encoded, -1);
-            imagens.add(produtoImagem);
-        }
-
-//      produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.descricao = edtDescricao.getText().toString();
         reader.create(produto, new Observer() {
@@ -135,7 +123,7 @@ public class ProdutoActivity extends AppCompatActivity {
             public void update(Observable observable, Object idproduto) {
                 Log.i("salvar produto", "produto salvo: " + idproduto);
 
-                for (ProdutoImagem pi: imagens) {
+                for (ProdutoImagem pi: convertImagesToRoom()) {
                     FeedProdutoImagem fpi = new FeedProdutoImagem();
                     fpi.imagem = pi.getImagem();
                     fpi.idproduto = (int) idproduto;
@@ -154,29 +142,66 @@ public class ProdutoActivity extends AppCompatActivity {
 
 
     public void salvarNoServidor(View view){
-        MainProduto mainProduto = new MainProduto();
-        PordutoRetrofitModel produto = new PordutoRetrofitModel();
-        produto.setPreco(Double.parseDouble(edtPreco.getText().toString()));
-        produto.setNome(edtNome.getText().toString());
-        produto.setDescricao(edtDescricao.getText().toString());
-        Date data = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        produto.setDataCadastro(sdf.format(data));
-        produto.setDataAlteracao(sdf.format(data));
-        produto.setDeletado(false);
+        if (isNetworkAvailable()) {
+            MainProduto mainProduto = new MainProduto();
+            PordutoRetrofitModel produto = new PordutoRetrofitModel();
+            produto.setPreco(Double.parseDouble(edtPreco.getText().toString()));
+            produto.setNome(edtNome.getText().toString());
+            produto.setDescricao(edtDescricao.getText().toString());
+            Date data = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            produto.setDataCadastro(sdf.format(data));
+            produto.setDataAlteracao(sdf.format(data));
+            produto.setDeletado(false);
+            produto.setImagens(convertImagesToWS());
 
-        ImagemProduto imagemProduto = new ImagemProduto();
-        imagemProduto.setDataCadastro(sdf.format(data));
-        imagemProduto.setDataAlteracao(sdf.format(data));
-        imagemProduto.setDeletado(false);
-        imagemProduto.setImagem("888");
-
-        mainProduto.salvarProduto(produto, imagemProduto);
-        Toast toast = Toast.makeText( getApplicationContext(), "Salvo Com Sucesso",Toast.LENGTH_LONG);
-        toast.show();
+            mainProduto.salvarProduto(produto, convertImagesToWS());
+            Toast toast = Toast.makeText(getApplicationContext(), "Salvo Com Sucesso", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            salvarRoom(view);
+        }
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
+    public List<ImagemProduto> convertImagesToWS() {
+        List<ImagemProduto> imagens = new ArrayList<>();
+        for (Bitmap img: viewPagerAdapter.getImages()) {
+            //PEGA A REFERÊNCIA DO IMAGEVIEW DO PERFIL E SETA O BACKGROUND COM A IMAGEM TIRADA
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            img.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            ImagemProduto imagemProduto = new ImagemProduto(encoded);
+            imagens.add(imagemProduto);
+        }
+
+        return imagens;
+    }
+
+    public List<ProdutoImagem> convertImagesToRoom() {
+        List<ProdutoImagem> imagens = new ArrayList<>();
+        for (Bitmap img: viewPagerAdapter.getImages()) {
+            //PEGA A REFERÊNCIA DO IMAGEVIEW DO PERFIL E SETA O BACKGROUND COM A IMAGEM TIRADA
+            //imageView.setImageBitmap(thumbnail);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            img.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            ProdutoImagem produtoImagem = new ProdutoImagem(encoded, -1);
+            imagens.add(produtoImagem);
+        }
+
+        return imagens;
+    }
 
 }

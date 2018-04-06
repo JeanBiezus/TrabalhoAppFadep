@@ -16,7 +16,7 @@ public class ImagemProduto implements Serializable {
     private Long versao;
     private Boolean deletado = false;
 
-    public ImagemProduto() {
+    public ImagemProduto(String imagem) {
         this.id = id;
         this.idProduto = idProduto;
         this.imagem = imagem;

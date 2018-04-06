@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class PordutoRetrofitModel implements Serializable {
 
@@ -19,6 +20,15 @@ public class PordutoRetrofitModel implements Serializable {
     private String dataAlteracao;
     private Long versao;
     private Boolean deletado = false;
+    private List<ImagemProduto> produtoImagem;
+
+    public List<ImagemProduto> getImagens() {
+        return produtoImagem;
+    }
+
+    public void setImagens(List<ImagemProduto> imagens) {
+        this.produtoImagem = imagens;
+    }
 
     public PordutoRetrofitModel() {
         this.id = id;
