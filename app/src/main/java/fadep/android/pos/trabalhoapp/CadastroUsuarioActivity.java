@@ -1,6 +1,7 @@
 package fadep.android.pos.trabalhoapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -36,8 +37,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     @BindView(R.id.edtNome) TextView edtNome;
     @BindView(R.id.edtLogin) TextView edtLogin;
     @BindView(R.id.edtsenha) TextView edtSenha;
-
-
+    String encoded;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +101,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream .toByteArray();
-            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
             byte[] decodedString = Base64.decode(encoded, Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -121,11 +121,19 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         u.setNome(edtNome.getText().toString());
         u.setLogin(edtLogin.getText().toString());
         u.setSenha(edtSenha.getText().toString());
-        u.setFoto("sasssss");
+        u.setFoto(encoded);
 
         mainProduto.salvarUsuario(u);
         Toast toast = Toast.makeText(getApplicationContext(), "Salvo Com Sucesso", Toast.LENGTH_LONG);
         toast.show();
+
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = pref.edit();
+//        editor.putInt("idUsuarioLogado", 10);
+//        editor.putString("salvaUsuario", edtNome.getText().toString());
+//        editor.commit();
+
+
 
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -104,6 +105,7 @@ public class ProdutoActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //PEGA A IMAGEM TIRADA
             imagem = data.getParcelableExtra("data");
+
             viewPagerAdapter.addImage(imagem);
             LinearLayout buttonsContainer = findViewById(R.id.image_buttons_container);
             buttonsContainer.bringToFront();
@@ -204,4 +206,9 @@ public class ProdutoActivity extends AppCompatActivity {
         return imagens;
     }
 
+    public void abrirGaleria(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 1);
+    }
 }

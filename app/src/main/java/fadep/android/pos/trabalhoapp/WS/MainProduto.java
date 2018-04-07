@@ -1,7 +1,7 @@
 package fadep.android.pos.trabalhoapp.WS;
 
 
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,12 +10,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Observer;
 
+import fadep.android.pos.trabalhoapp.CadastroUsuarioActivity;
+import fadep.android.pos.trabalhoapp.LoginActivity;
 import fadep.android.pos.trabalhoapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainProduto extends AppCompatActivity{
 
-    private String BASE_URL = "http://192.168.2.102:8085/WebMobile-0.0.1-SNAPSHOT/rest/";
+    private String BASE_URL = "http://192.168.2.113:8085/WebMobile-0.0.1-SNAPSHOT/rest/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,7 @@ public class MainProduto extends AppCompatActivity{
     public void salvarProduto(final PordutoRetrofitModel produtoModel, final List<ImagemProduto> imagemProduto){
 
 
-        ProdutoWS ws = retrofit.create(ProdutoWS.class);
+        AbstractWS ws = retrofit.create(AbstractWS.class);
 //        PordutoRetrofitModel p = new PordutoRetrofitModel() ;
 //        p.setNome("JEAN");
 //        p.setDescricao("JEAN");
@@ -56,7 +55,7 @@ public class MainProduto extends AppCompatActivity{
             @Override
             public void onResponse(Call<PordutoRetrofitModel> call, Response<PordutoRetrofitModel> response) {
                 if (response.isSuccessful()){
-                    ProdutoWS ws = retrofit.create(ProdutoWS.class);
+                    AbstractWS ws = retrofit.create(AbstractWS.class);
 
                     Log.i("dss", "ds" + response.body().getId()+response.body().getNome());
                     // salva na tabela imagem as imagens
@@ -110,7 +109,7 @@ public class MainProduto extends AppCompatActivity{
                 .addConverterFactory(GsonConverterFactory.create(g))
                 .build();
 
-        ProdutoWS ws = retrofit.create(ProdutoWS.class);
+        AbstractWS ws = retrofit.create(AbstractWS.class);
         Call<List<PordutoRetrofitModel>> produtos = ws.findALL();
 
         produtos.enqueue(new Callback<List<PordutoRetrofitModel>>() {
@@ -145,7 +144,7 @@ public class MainProduto extends AppCompatActivity{
                 .addConverterFactory(GsonConverterFactory.create(g))
                 .build();
 
-        ProdutoWS ws = retrofit.create(ProdutoWS.class);
+        AbstractWS ws = retrofit.create(AbstractWS.class);
         Call<List<PordutoRetrofitModel>> produtos = ws.buscarProdutos();
 
         produtos.enqueue(new Callback<List<PordutoRetrofitModel>>() {
@@ -161,7 +160,7 @@ public class MainProduto extends AppCompatActivity{
                     callback.update(null, response.body());
 
                 }else{
-                    Toast.makeText(getApplicationContext(),"erro" + response.code(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(),"erro" + response.code(), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -176,7 +175,7 @@ public class MainProduto extends AppCompatActivity{
     }
 
     public void salvarUsuario(final Usuario usuario){
-        ProdutoWS ws = retrofit.create(ProdutoWS.class);
+        AbstractWS ws = retrofit.create(AbstractWS.class);
         final Call<Usuario> u = ws.salvarUsuario(usuario);
        u.enqueue(new Callback<Usuario>() {
            @Override
@@ -190,6 +189,27 @@ public class MainProduto extends AppCompatActivity{
            @Override
            public void onFailure(Call<Usuario> call, Throwable t) {
 
+           }
+       });
+    }
+    public void loga(Login login){
+        AbstractWS ws = retrofit.create(AbstractWS.class);
+       final Call<Login> l = ws.logar(login);
+       l.enqueue(new Callback<Login>() {
+           @Override
+           public void onResponse(Call<Login> call, Response<Login> response) {
+               Log.e("PRINTOOOO", " PRINTOOOO"+ response.body());
+               if (response.isSuccessful()) {
+                   Log.e("PRINTOOOO", " PRINTOOOO"+ response.body());
+
+//                   callback.update(null, response.body());
+                   return;
+               }
+           }
+
+           @Override
+           public void onFailure(Call<Login> call, Throwable t) {
+               Log.e("PRINTOOOO", " FFFFFFF00");
            }
        });
     }
