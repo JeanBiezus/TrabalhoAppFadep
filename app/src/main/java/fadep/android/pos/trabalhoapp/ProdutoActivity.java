@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -121,6 +122,7 @@ public class ProdutoActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //PEGA A IMAGEM TIRADA
             Bitmap imagem = data.getParcelableExtra("data");
+            imagem = data.getParcelableExtra("data");
             viewPagerAdapter.addImage(imagem);
             LinearLayout buttonsContainer = findViewById(R.id.image_buttons_container);
             buttonsContainer.bringToFront();
@@ -264,5 +266,11 @@ public class ProdutoActivity extends AppCompatActivity {
     public void fecharActivity(String returnText) {
         Toast.makeText(this, returnText, Toast.LENGTH_LONG).show();
         finish();
+    }
+
+    public void abrirGaleria(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 1);
     }
 }
