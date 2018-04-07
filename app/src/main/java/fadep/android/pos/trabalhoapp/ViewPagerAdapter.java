@@ -58,15 +58,18 @@ public class ViewPagerAdapter extends PagerAdapter {
         viewPager.removeView(view);
         images.remove(position);
         notifyDataSetChanged();
-
-        if (images.size() > 0)
-            viewPager.setCurrentItem(images.size() - 1, true);
     }
 
     public void addImage(Bitmap image) {
         images.add(image);
         notifyDataSetChanged();
     }
+
+    public void setImages(List<Bitmap> images) {
+        this.images = images;
+        notifyDataSetChanged();
+    }
+
 
     public List<Bitmap> getImages() {
         return images;

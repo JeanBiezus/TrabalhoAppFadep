@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,7 @@ public class ProdutoActivity extends AppCompatActivity {
 
     List<FeedProduto> produtoRoom;
     private FeedReaderDbHelper reader;
-    private Bitmap imagem;
+    private int idProduto = 0;
 
     @BindView(R.id.edtNome) TextView edtNome;
     @BindView(R.id.edtPreco) TextView edtPreco;
@@ -67,34 +69,49 @@ public class ProdutoActivity extends AppCompatActivity {
 
         viewPager.setAdapter(viewPagerAdapter);
 
-        btnRemoverImagem = findViewById(R.id.btn_remover_imagem);
+        Intent intent = getIntent();
+        long idProduto = intent.getLongExtra("idProduto", -1);
+        if (idProduto > 0) {
+            this.idProduto = (int) idProduto;
+            FeedProduto produto = reader.findById(idProduto, null);
 
+            viewPagerAdapter.setImages(convertImagesToBitmap(produto.imagens));
+            edtNome.setText(produto.nome);
+            edtDescricao.setText(produto.descricao);
+            edtPreco.setText(Double.toString(produto.valor));
+        }
+
+        btnRemoverImagem = findViewById(R.id.btn_remover_imagem);
         if (viewPagerAdapter.getCount() == 0)
             btnRemoverImagem.setVisibility(View.GONE);
+
+        Button btnRemoverPublicacao = findViewById(R.id.btn_remover_publicacao);
+        if (this.idProduto == 0) {
+            btnRemoverPublicacao.setVisibility(View.GONE);
+        }
+
+        LinearLayout buttonsContainer = findViewById(R.id.image_buttons_container);
+        buttonsContainer.bringToFront();
+
     }
 
     public void abrirCamera(View view) {
-        if (viewPagerAdapter.getCount() < 3) {
-            //INSTANCIA O PACKAGEMANAGER PARA PEGAR O CAMINHO DOS ARQUIVOS DO APP
-            PackageManager m = getPackageManager();
-            String s = getPackageName();
-            try {
-                PackageInfo p = m.getPackageInfo(s, 0);
-                s = p.applicationInfo.dataDir;
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.w("yourtag", "Error Package name not found ", e);
-            }
+        //INSTANCIA O PACKAGEMANAGER PARA PEGAR O CAMINHO DOS ARQUIVOS DO APP
+        PackageManager m = getPackageManager();
+        String s = getPackageName();
+        try {
+            PackageInfo p = m.getPackageInfo(s, 0);
+            s = p.applicationInfo.dataDir;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.w("yourtag", "Error Package name not found ", e);
+        }
 
-            //ABRE A CÂMERA
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.withAppendedPath(Uri.parse(s), "profile_img"));
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(intent, 1);
-            }
-        } else {
-            Toast toast = Toast.makeText(this, R.string.maximo_imagens_publicacao, Toast.LENGTH_LONG);
-            toast.show();
+        //ABRE A CÂMERA
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                Uri.withAppendedPath(Uri.parse(s), "profile_img"));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -103,7 +120,7 @@ public class ProdutoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //PEGA A IMAGEM TIRADA
-            imagem = data.getParcelableExtra("data");
+            Bitmap imagem = data.getParcelableExtra("data");
             viewPagerAdapter.addImage(imagem);
             LinearLayout buttonsContainer = findViewById(R.id.image_buttons_container);
             buttonsContainer.bringToFront();
@@ -118,19 +135,42 @@ public class ProdutoActivity extends AppCompatActivity {
         produto.nome = edtNome.getText().toString();
         produto.valor = Double.parseDouble(edtPreco.getText().toString());
         produto.descricao = edtDescricao.getText().toString();
-        reader.create(produto, new Observer() {
-            @Override
-            public void update(Observable observable, Object idproduto) {
-                Log.i("salvar produto", "produto salvo: " + idproduto);
 
-                for (ProdutoImagem pi: convertImagesToRoom()) {
-                    FeedProdutoImagem fpi = new FeedProdutoImagem();
-                    fpi.imagem = pi.getImagem();
-                    fpi.idproduto = (int) idproduto;
-                    reader.create(fpi);
+        final ProdutoActivity pa = this;
+        if (idProduto == 0) {
+            reader.create(produto, new Observer() {
+                @Override
+                public void update(Observable observable, Object idproduto) {
+                    Log.i("salvar produto", "produto salvo: " + idproduto);
+
+                    for (ProdutoImagem pi : convertImagesToRoom()) {
+                        FeedProdutoImagem fpi = new FeedProdutoImagem();
+                        fpi.imagem = pi.getImagem();
+                        fpi.idproduto = (int) idproduto;
+                        reader.create(fpi);
+                    }
+
+                    pa.fecharActivity("Salvo com sucesso");;
                 }
-            }
-        });
+            });
+        } else {
+            reader.deletarImagens(idProduto);
+
+            produto._id = idProduto;
+            reader.update(produto, new Observer() {
+                @Override
+                public void update(Observable observable, Object o) {
+                    for (ProdutoImagem pi : convertImagesToRoom()) {
+                        FeedProdutoImagem fpi = new FeedProdutoImagem();
+                        fpi.imagem = pi.getImagem();
+                        fpi.idproduto = idProduto;
+                        reader.create(fpi);
+                    }
+
+                    pa.fecharActivity("Savo com sucesso");
+                }
+            });
+        }
     }
 
     public void removerImagem(View view) {
@@ -204,4 +244,25 @@ public class ProdutoActivity extends AppCompatActivity {
         return imagens;
     }
 
+    public List<Bitmap> convertImagesToBitmap(List<ProdutoImagem> imagens) {
+        List<Bitmap> bitMapImages = new ArrayList<>();
+        for (ProdutoImagem produtoImagem: imagens) {
+            byte[] decodedString = Base64.decode(produtoImagem.getImagem(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            bitMapImages.add(decodedByte);
+        }
+
+        return bitMapImages;
+    }
+
+    public void removerRoom(View view) {
+        reader.deletarImagens(idProduto);
+        reader.delete(idProduto);
+        fecharActivity("Removido com sucesso");
+    }
+
+    public void fecharActivity(String returnText) {
+        Toast.makeText(this, returnText, Toast.LENGTH_LONG).show();
+        finish();
+    }
 }

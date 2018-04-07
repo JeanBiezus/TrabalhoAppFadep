@@ -12,7 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,7 @@ import fadep.android.pos.trabalhoapp.sqlite.FeedProduto;
 import fadep.android.pos.trabalhoapp.sqlite.FeedReaderDbHelper;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
     private List<FeedProduto> produtosRoom;
     private FeedReaderDbHelper reader;
@@ -69,22 +72,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void atualizarListaMain(){
-//        produtosRoom = reader.read();
-//        List<Produto> produtos = new ArrayList<>();
-//        for (FeedProduto feedProduto : produtosRoom) {
-//            produtos.add(feedProduto.getProduto());
-//        }
+        produtosRoom = reader.read();
+        List<Produto> produtos = new ArrayList<>();
+        for (FeedProduto feedProduto : produtosRoom) {
+            produtos.add(feedProduto.getProduto());
+        }
 
-        MainProduto mainProduto = new MainProduto();
-        final MainActivity ma = this;
-        mainProduto.buscarProdutos(new Observer() {
-            @Override
-            public void update(Observable observable, Object o) {
-                List<Produto> produtos = (List<Produto>) o;
-                ProdutoListaAdapter listaAdapter = new ProdutoListaAdapter(produtos, ma);
-                lista.setAdapter(listaAdapter);
-            }
-        });
+        ProdutoListaAdapter listaAdapter = new ProdutoListaAdapter(produtos, this);
+        lista.setAdapter(listaAdapter);
+        lista.setOnItemClickListener(this);
     }
 
     @Override
@@ -143,5 +139,12 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent intent = new Intent(this, ProdutoActivity.class);
+        intent.putExtra("idProduto", l);
+        startActivity(intent);
     }
 }

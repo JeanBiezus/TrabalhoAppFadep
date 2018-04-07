@@ -63,30 +63,22 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public List<FeedProduto> read() {
         SQLiteDatabase db = getReadableDatabase();
 
-        String[] projection = {
-                FeedContract._ID,
-                FeedContract.Produto.COLUMN_NAME_NOME,
-                FeedContract.Produto.COLUMN_NAME_DESCRICAO,
-                FeedContract.Produto.COLUMN_NAME_VALOR,
-                FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM
-        };
-
-        String sortOrder =
-                FeedContract._ID + " desc";
-
-        Cursor cursor = db.rawQuery("SELECT * FROM produto p INNER JOIN produtoimagem pi ON p._id = pi.idproduto", null);
+        Cursor cursor = db.rawQuery("SELECT p.* FROM produto p", null);
         List<FeedProduto> feedProdutos = new ArrayList<>();
         while (cursor.moveToNext()) {
+
             FeedProduto feedProduto = new FeedProduto();
             feedProduto._id = cursor.getInt(cursor.getColumnIndex((FeedContract._ID)));
             feedProduto.nome = cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_NOME)));
             feedProduto.descricao = cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_DESCRICAO)));
             feedProduto.valor = Double.parseDouble(cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_VALOR))));
 
-            ProdutoImagem produtoImagem = new ProdutoImagem(cursor.getString(cursor.getColumnIndex((FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM))), feedProduto._id);
+            String sqlImagem = "SELECT * FROM produtoimagem pi WHERE pi.idproduto = " + feedProduto._id + " ORDER BY _id DESC LIMIT 1";
+            Cursor cursorImagem = db.rawQuery(sqlImagem, null);
+            cursorImagem.moveToFirst();
+            ProdutoImagem produtoImagem = new ProdutoImagem(cursorImagem.getString(cursorImagem.getColumnIndex((FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM))), feedProduto._id);
 
             feedProduto.imagens.add(produtoImagem);
-
             feedProdutos.add(feedProduto);
 
         }
@@ -95,7 +87,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return feedProdutos;
     }
 
-    public int update(FeedProduto feedProduto) {
+    public int update(FeedProduto feedProduto, Observer callback) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -112,6 +104,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 selection,
                 selectionArgs);
         db.close();
+        callback.update(null, count);
         return count;
     }
 
@@ -124,5 +117,46 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         int deletedRows = db.delete(FeedContract.Produto.TABLE_NAME, selection, selectionArgs);
 
         db.close();
+    }
+
+    public void deletarImagens(int idProduto) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = FeedContract.ProdutoImagem.COLUMN_NAME_ID_PRODUTO + " = ?";
+
+        String[] selectionArgs = {"" + idProduto};
+
+        int deletedRows = db.delete(FeedContract.ProdutoImagem.TABLE_NAME, selection, selectionArgs);
+
+        db.close();
+    }
+
+    public FeedProduto findById(long id, Observer callback){
+        SQLiteDatabase db = getReadableDatabase();
+
+        String produtoSql = "SELECT * FROM produto WHERE _id = " + id;
+        Cursor cursor = db.rawQuery(produtoSql, null);
+
+        FeedProduto feedProduto = new FeedProduto();
+        cursor.moveToFirst();
+        feedProduto._id = cursor.getInt(cursor.getColumnIndex((FeedContract._ID)));
+        feedProduto.nome = cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_NOME)));
+        feedProduto.descricao = cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_DESCRICAO)));
+        feedProduto.valor = Double.parseDouble(cursor.getString(cursor.getColumnIndex((FeedContract.Produto.COLUMN_NAME_VALOR))));
+
+        String imagensSql = "SELECT * FROM " + FeedContract.ProdutoImagem.TABLE_NAME +
+                                " pi WHERE pi.idproduto = " + feedProduto._id;
+
+        Cursor cursorImagens = db.rawQuery(imagensSql, null);
+        while (cursorImagens.moveToNext()) {
+
+            ProdutoImagem produtoImagem = new ProdutoImagem(cursorImagens.getString(cursorImagens.getColumnIndex((FeedContract.ProdutoImagem.COLUMN_NAME_IMAGEM))), feedProduto._id);
+
+            feedProduto.imagens.add(produtoImagem);
+
+        }
+        cursor.close();
+        cursorImagens.close();
+        db.close();
+        return feedProduto;
     }
 }

@@ -1,6 +1,7 @@
 package fadep.android.pos.trabalhoapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -68,4 +69,5 @@ public class ProdutoListaAdapter extends BaseAdapter {
 
         return v;
     }
+
 }

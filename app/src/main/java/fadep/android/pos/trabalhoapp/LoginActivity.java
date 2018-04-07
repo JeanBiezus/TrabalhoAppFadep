@@ -23,9 +23,9 @@ public class LoginActivity extends AppCompatActivity{
         setSupportActionBar(myToolbar);
 
         //MOSTRA O NOME DO APP E O BOTÃO VOLTAR NO TOOLBAR
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        myToolbar.setTitle("");
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //myToolbar.setTitle("");
     }
 
     //ABRE A ACTIVITY DE CADASTRO DE USUARIO
